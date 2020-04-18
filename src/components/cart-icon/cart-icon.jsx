@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { toggleCartHidden } from "../../redux/cart/cart-actions";
 import { ReactComponent as ShoppingIcon } from "../../assets/shopping.svg";
 import { selectCartItemsCount } from "../../redux/cart/cart-selectors";
+import { createStructuredSelector } from "reselect";
 
 import "./cart-icon.scss";
 
@@ -15,11 +16,9 @@ const CartIcon = ({ toggleCartHidden, itemCount }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    itemCount: selectCartItemsCount(state),
-  };
-};
+const mapStateToProps = createStructuredSelector({
+  itemCount: selectCartItemsCount,
+});
 
 // Alternative syntax with destructuring and without selector (NB: Selectors are used for memoization  i.e. to avoid unnecessary re-render of components)
 // const mapStateToProps = ({ cart: { cartItems } }) => {
