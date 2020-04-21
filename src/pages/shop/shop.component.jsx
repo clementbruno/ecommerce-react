@@ -22,13 +22,22 @@ class ShopPage extends React.Component {
   componentDidMount() {
     const { updateCollections } = this.props;
     const collectionRef = firestore.collection("collections");
-    this.unsubscribeFromSnapshot = collectionRef.onSnapshot(
-      async (snapshot) => {
-        const collectionsMap = convertCollectionSnapshotToMap(snapshot);
-        updateCollections(collectionsMap);
-        this.setState({ loading: false });
-      }
-    );
+
+    // HEREAFTER IS A STANDARD PROMISED BASED CALL USING FIREBASE get() TO AVOIR THE NESTING OF DATA WE WOULD HAVE HAD WITH A TRADITIONAL FETCH CALL - CALL IS MADE ONLY ONCE WHEN THE COMPONENT MOUNTS
+    collectionRef.get().then((snapshot) => {
+      const collectionsMap = convertCollectionSnapshotToMap(snapshot);
+      updateCollections(collectionsMap);
+      this.setState({ loading: false });
+    });
+
+    // HEREAFTER IS A VERSION USING THE OBSERVABLE/OBSERVER PATTERN SAME AS RxJS THAT IS NATIVE TO FIREBASE. NO NEED TO REMOUNT THE COMPONENT TO GET UPDATED DATA
+    // this.unsubscribeFromSnapshot = collectionRef.onSnapshot(
+    //   async (snapshot) => {
+    //     const collectionsMap = convertCollectionSnapshotToMap(snapshot);
+    //     updateCollections(collectionsMap);
+    //     this.setState({ loading: false });
+    //   }
+    // );
   }
 
   componentWillUnmount() {}
